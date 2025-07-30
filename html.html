@@ -235,21 +235,224 @@
             transition: width 0.3s ease;
         }
 
-        @media (max-width: 600px) {
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .game-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
             .game-board {
-                grid-template-columns: repeat(4, 1fr);
-                max-width: 320px;
+                max-width: 400px;
             }
             
             .tile {
                 width: 60px;
                 height: 60px;
-                font-size: 1.5em;
+                font-size: 1.6em;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .game-container {
+                padding: 15px;
+                border-radius: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 8px;
+            }
+            
+            .subtitle {
+                font-size: 0.9em;
+                margin-bottom: 20px;
             }
             
             .stats {
                 flex-direction: column;
                 align-items: center;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            
+            .stat {
+                min-width: 100px;
+                padding: 10px 20px;
+            }
+            
+            .stat-value {
+                font-size: 1.5em;
+            }
+            
+            .game-board {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 280px;
+                gap: 6px;
+                padding: 15px;
+            }
+            
+            .tile {
+                width: 55px;
+                height: 55px;
+                font-size: 1.4em;
+                border-radius: 8px;
+            }
+            
+            .controls {
+                gap: 10px;
+                margin-top: 20px;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 1em;
+                border-radius: 20px;
+            }
+            
+            .difficulty {
+                gap: 5px;
+                margin-bottom: 15px;
+            }
+            
+            .difficulty-btn {
+                padding: 8px 16px;
+                font-size: 0.9em;
+                border-radius: 15px;
+            }
+            
+            .message {
+                font-size: 1em;
+                margin: 15px 0;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .game-container {
+                padding: 12px;
+            }
+            
+            h1 {
+                font-size: 1.6em;
+            }
+            
+            .stats {
+                gap: 8px;
+            }
+            
+            .stat {
+                min-width: 80px;
+                padding: 8px 16px;
+            }
+            
+            .stat-value {
+                font-size: 1.3em;
+            }
+            
+            .stat-label {
+                font-size: 0.8em;
+            }
+            
+            .game-board {
+                max-width: 240px;
+                gap: 4px;
+                padding: 12px;
+            }
+            
+            .tile {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2em;
+                border-radius: 6px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 200px;
+                padding: 10px 16px;
+                font-size: 0.9em;
+            }
+            
+            .difficulty {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .difficulty-btn {
+                width: 120px;
+                padding: 8px 12px;
+                font-size: 0.85em;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .game-board {
+                max-width: 200px;
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .tile {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1em;
+            }
+        }
+
+        /* Landscape orientation for mobile */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+            }
+            
+            .game-container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 5px;
+            }
+            
+            .subtitle {
+                margin-bottom: 10px;
+            }
+            
+            .stats {
+                flex-direction: row;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .stat {
+                padding: 8px 12px;
+            }
+            
+            .stat-value {
+                font-size: 1.2em;
+            }
+            
+            .game-board {
+                margin: 15px auto;
+                padding: 10px;
+            }
+            
+            .controls {
+                margin-top: 15px;
             }
         }
     </style>
@@ -344,7 +547,7 @@
 
         function renderBoard() {
             const board = document.getElementById('gameBoard');
-            const cols = gameState.difficulty === 'easy' ? 4 : 6;
+            const cols = getResponsiveColumns();
             board.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
             
             board.innerHTML = '';
@@ -360,6 +563,23 @@
                 
                 board.appendChild(tile);
             });
+        }
+
+        function getResponsiveColumns() {
+            const screenWidth = window.innerWidth;
+            const difficulty = gameState.difficulty;
+            
+            if (screenWidth <= 320) {
+                return 3; // Very small screens
+            } else if (screenWidth <= 400) {
+                return difficulty === 'easy' ? 3 : 4;
+            } else if (screenWidth <= 600) {
+                return difficulty === 'easy' ? 4 : 4;
+            } else if (screenWidth <= 900) {
+                return difficulty === 'easy' ? 4 : 5;
+            } else {
+                return difficulty === 'easy' ? 4 : 6;
+            }
         }
 
         function selectTile(index) {
@@ -549,6 +769,36 @@
 
         // Initialize game
         startNewGame();
+
+        // Handle window resize for responsive layout
+        window.addEventListener('resize', () => {
+            renderBoard();
+        });
+
+        // Prevent zoom on double tap for mobile
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Add touch feedback for mobile
+        document.addEventListener('touchstart', function(e) {
+            if (e.target.classList.contains('tile') || e.target.classList.contains('btn')) {
+                e.target.style.transform = 'scale(0.95)';
+            }
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (e.target.classList.contains('tile') || e.target.classList.contains('btn')) {
+                setTimeout(() => {
+                    e.target.style.transform = '';
+                }, 100);
+            }
+        });
     </script>
 </body>
 </html>
